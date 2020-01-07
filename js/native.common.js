@@ -22,9 +22,14 @@ var nativeCommon = {
                     }
                     break;
                 case "Android":
-                    nativeCommon.contacts.android.visitContacts(function(name, phoneNumber){
-                        callBack(name, phoneNumber);
-                    });
+					// Android通过plus.contacts.getAddressBook可弹出通讯录授权提示框
+					plus.contacts.getAddressBook(plus.contacts.ADDRESSBOOK_PHONE, function (addressbook) {
+						nativeCommon.contacts.android.visitContacts(function(name, phoneNumber){
+						    callBack(name, phoneNumber);
+						});
+					}, function (e) {
+						plus.nativeUI.alert("Get address book failed: " + e.message);
+					});
                     break;
                 default:
                     break;
@@ -44,13 +49,18 @@ var nativeCommon = {
                     "contactPicker:didSelectContact:":function(picker, contact){
                         console.log(JSON.stringify(picker));
                         console.log(JSON.stringify(contact));
-                        //姓名
+                        //姓名/公司
                         var name = "";
                         //姓氏
                         var familyName = contact.plusGetAttribute("familyName");
                         //名字
                         var givenName = contact.plusGetAttribute("givenName");
-                        name = familyName+givenName;
+                        //公司
+						var organizationName = contact.plusGetAttribute("organizationName");
+						name = familyName+givenName;
+						if (name.length <= 0) {
+							name = organizationName;
+						}
                         //电话号码
                         var phoneNo = "";
                         var phoneNumbers = contact.plusGetAttribute("phoneNumbers");
@@ -91,13 +101,18 @@ var nativeCommon = {
                         
                         //所以之前的代码不用改
                         var contact = peoplePicker;
-                        //姓名
+                        //姓名/公司
                         var name = "";
                         //姓氏
                         var familyName = contact.plusGetAttribute("familyName");
                         //名字
                         var givenName = contact.plusGetAttribute("givenName");
-                        name = familyName+givenName;
+                        //公司
+						var organizationName = contact.plusGetAttribute("organizationName");
+						name = familyName+givenName;
+						if (name.length <= 0) {
+							name = organizationName;
+						}
                         //电话号码
                         var phoneNo = "";
                         var phoneNumbers = contact.plusGetAttribute("phoneNumbers");
