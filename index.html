@@ -15,7 +15,13 @@
       			nativeCommon.contacts.getContact(function(name, phoneNumber){
       				console.log("姓名："+name+"，电话号码："+phoneNumber);
       				mui.toast("姓名："+name+"，电话号码："+phoneNumber);
-      			});
+      			},function(){
+					console.log('开始加载');
+					mui.showLoading("正在加载..."); //给mui组件扩展了加载动画后才能这样使用
+				},function(){
+					console.log('加载完成');
+					mui.hideLoading(); //给mui组件扩展了加载动画后才能这样使用
+				});
       		});
       	});
     </script>
